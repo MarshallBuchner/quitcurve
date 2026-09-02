@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { QuitCurveProvider } from "@/context/QuitCurveProvider";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,8 +62,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <QuitCurveProvider>{children}</QuitCurveProvider>
-      </body>
+  <QuitCurveProvider>{children}</QuitCurveProvider>
+  <Analytics />
+  <SpeedInsights />
+</body>
     </html>
   );
 }
