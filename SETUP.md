@@ -47,6 +47,23 @@ Complete setup for Supabase sync, Vercel deployment, and custom domains.
 
 ---
 
+## 1b. Check-in reminders (optional)
+
+Daily email (Resend) + optional SMS (Twilio). Full guide: **[REMINDERS.md](./REMINDERS.md)**
+
+1. Run `supabase/reminders.sql` in the SQL Editor
+2. Add Vercel env vars: `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `RESEND_API_KEY`, `REMINDER_FROM_EMAIL`
+3. Redeploy (enables hourly cron at `/api/cron/reminders`)
+4. Users opt in at `/reminders`
+
+### Puff pacing (daily taper UI)
+
+1. Run `supabase/puff_logs.sql` in the SQL Editor (optional — local works without it)
+2. Dashboard shows today’s puff target, used/remaining, pacing window, and **Log a puff**
+3. Details: **[PACING.md](./PACING.md)**
+
+---
+
 ## 2. Vercel deployment (POWRHockey team)
 
 ### Create GitHub repo

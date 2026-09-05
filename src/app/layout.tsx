@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
-import { QuitCurveProvider } from "@/context/QuitCurveProvider";
-import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { QuitCurveProvider } from "@/context/QuitCurveProvider";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +49,10 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "QuitCurve",
   },
+  icons: {
+    icon: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/icon-180.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export const viewport: Viewport = {
@@ -62,10 +66,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-  <QuitCurveProvider>{children}</QuitCurveProvider>
-  <Analytics />
-  <SpeedInsights />
-</body>
+        <QuitCurveProvider>{children}</QuitCurveProvider>
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
