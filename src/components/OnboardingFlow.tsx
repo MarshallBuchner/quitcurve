@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuitCurve } from "@/context/QuitCurveProvider";
+import {
+  trackOnboardingCompleted,
+  trackOnboardingStarted,
+  trackPlanCreated,
+} from "@/lib/heycatch";
 import type {
   Device,
   Frequency,
@@ -77,6 +82,17 @@ export function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [accountError, setAccountError] = useState("");
   const [adultConfirmed, setAdultConfirmed] = useState(false);
+  const startedTracked = useRef(false);
+
+  useEffect(() => {
+    if (!open) {
+      startedTracked.current = false;
+      return;
+    }
+    if (startedTracked.current) return;
+    startedTracked.current = true;
+    trackOnboardingStarted();
+  }, [open]);
 
   if (!open) return null;
 
@@ -113,6 +129,8 @@ export function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
   const finishOnboarding = async (withAccount: boolean) => {
     const plan = buildPlan();
     await setUserPlan(plan);
+    trackPlanCreated({ pace, guest: !withAccount });
+    trackOnboardingCompleted({ pace, guest: !withAccount });
 
     if (!withAccount) {
       handleClose();
@@ -191,11 +209,13 @@ export function OnboardingFlow({ open, onClose }: OnboardingFlowProps) {
               setAccountError("");
               const plan = buildPlan();
               await setUserPlan(plan);
+              trackPlanCreated({ pace, guest: false });
               const result = await createAccount(email, name);
               if (result.error) {
                 setAccountError(result.error);
                 return;
               }
+              trackOnboardingCompleted({ pace, guest: false });
               if (result.mode === "magic_link") {
                 setMagicLinkSent(true);
                 return;
