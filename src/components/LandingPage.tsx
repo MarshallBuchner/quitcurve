@@ -365,6 +365,10 @@ function NicotineCurvePreview() {
 }
 
 function FaqSection() {
+  // Keep native <details> so FAQ works before JS hydrates.
+  // Do NOT put display:flex on <summary> — Safari/iOS often fails to
+  // toggle (HeyCatch rage taps on "Is QuitCurve free?"). Flex lives on
+  // an inner wrapper instead (flexbugs #9).
   return (
     <section id="faq" className="px-5 py-16 md:py-24">
       <div className="mx-auto max-w-3xl">
@@ -380,13 +384,15 @@ function FaqSection() {
         <div className="mt-10 divide-y divide-white/8 border-y border-white/8">
           {LANDING_FAQS.map((item) => (
             <details key={item.question} className="group py-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-base font-medium text-foreground marker:content-none [&::-webkit-details-marker]:hidden">
-                <span>{item.question}</span>
-                <span
-                  aria-hidden
-                  className="shrink-0 text-accent transition group-open:rotate-45"
-                >
-                  +
+              <summary className="cursor-pointer list-none text-left text-base font-medium text-foreground marker:content-none [&::-webkit-details-marker]:hidden">
+                <span className="flex w-full items-center justify-between gap-4">
+                  <span>{item.question}</span>
+                  <span
+                    aria-hidden
+                    className="shrink-0 text-accent transition group-open:rotate-45"
+                  >
+                    +
+                  </span>
                 </span>
               </summary>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
